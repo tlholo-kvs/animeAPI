@@ -22,6 +22,18 @@ namespace animeAPI.Controllers
             return await _context.DateReleaseds.ToListAsync(); ;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id) 
+        {
+            var dateReleased = await _context.DateReleaseds.FirstOrDefaultAsync(m => m.Id == id);
+            if(dateReleased == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(dateReleased);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(DateReleased dateReleased)
         {
@@ -33,16 +45,20 @@ namespace animeAPI.Controllers
 
         [HttpPut]
         public async Task<IActionResult> Put(DateReleased dateReleasedData)
-        { 
-            var dateReleased = await _context.DateReleaseds.FindAsync(dateReleasedData);
-            if(dateReleased == null)
+        {
+            if (dateReleasedData == null || dateReleasedData.Id == 0)
                 return BadRequest();
+
+            var dateReleased = await _context.DateReleaseds.FindAsync(dateReleasedData.Id);
+            if( dateReleased == null)
+                return NotFound();
 
             dateReleased.FirstAiring = dateReleasedData.FirstAiring;
 
             await _context.SaveChangesAsync();
 
             return Ok();
+
         }
 
         [HttpDelete("{id}")]
