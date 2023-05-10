@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
-namespace animeAPI.Models;
+namespace animeAPI;
 
 public partial class SimpleAnimeListContext : DbContext
 {
@@ -27,10 +26,8 @@ public partial class SimpleAnimeListContext : DbContext
     public virtual DbSet<RottenTomatoesRating> RottenTomatoesRatings { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        
-        optionsBuilder.UseNpgsql(connectionString: "ConnectionString"); 
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=simple-anime-list;Username=postgres;Password=@superT");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,6 +50,7 @@ public partial class SimpleAnimeListContext : DbContext
             entity.Property(e => e.FirstAiring)
                 .HasColumnType("character varying")
                 .HasColumnName("first_airing");
+            entity.Property(e => e.Id).HasColumnName("id");
         });
 
         modelBuilder.Entity<NumberOfEpisode>(entity =>
@@ -62,6 +60,7 @@ public partial class SimpleAnimeListContext : DbContext
                 .ToTable("number_of_episodes");
 
             entity.Property(e => e.Episodes).HasColumnName("episodes");
+            entity.Property(e => e.Id).HasColumnName("id");
         });
 
         modelBuilder.Entity<NumberOfSeason>(entity =>
@@ -70,6 +69,7 @@ public partial class SimpleAnimeListContext : DbContext
                 .HasNoKey()
                 .ToTable("number_of_seasons");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Seasons).HasColumnName("seasons");
         });
 
@@ -79,6 +79,7 @@ public partial class SimpleAnimeListContext : DbContext
                 .HasNoKey()
                 .ToTable("rotten_tomatoes_rating");
 
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Rating).HasColumnName("rating");
         });
 
