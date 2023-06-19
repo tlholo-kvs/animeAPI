@@ -22,6 +22,26 @@ namespace animeAPI.Controllers
             return await _context.NumberOfEpisodes.ToListAsync();   
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            if (id < 1)
+                return BadRequest();
 
+            var episode = await _context.NumberOfEpisodes.FirstOrDefaultAsync();
+            if(episode == null)
+                return NotFound();
+
+            return Ok(episode);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(NumberOfEpisode numberOfEpisode)
+        {
+            _context.Add(numberOfEpisode);
+            await _context.SaveChangesAsync();  
+
+            return Ok();
+        }
     }
 }
